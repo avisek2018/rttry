@@ -200,38 +200,45 @@ class CommunicationHandler:
 
                         print(f"Function args: {message.arguments}")
 
-                        if function_name == "get_result":
+                        if function_name == "validate_user":
                             # Handle the function call to get results
                             logger.info(f"Function Call Name: {function_name}")
                             try:
-                                query = args["query"]
-                                search_finder_response = SearchResults().google_search(query, num_results=5)
-                                logger.info(f"Search Results: {search_finder_response}")
-                                #first_result_response = next(iter(search_finder_response), None)
-                                first_result_response = search_finder_response[0]
-                                if not first_result_response:
+                                #query = args["query"]
+                                # Use the phone number from the handler (self.target_phone_number)
+                                is_verified = await VerifyUser.verify_user(self.target_phone_number)
+                                logger.info(f"User Verified? {is_verified}")
+                                if not is_verified:
                                     await self.rt_client.ws.send_json(
                                         {
                                             "type": "conversation.item.create",
                                             "item": {
                                                 "type": "function_call_output",
-                                                "output": "I couldn't find a result for you.",
+                                                "output": "Sorry, I couldn't verify your phone number.",
+                                                "call_id": call_id  # Use original call_id
+                                            }
+                                        }
+                                    )
+                                else:
+                                    await self.rt_client.ws.send_json(
+                                        {
+                                            "type": "conversation.item.create",
+                                            "item": {
+                                                "type": "function_call_output",
+                                                "output": "I failed to veeify you based on your ph no.",
                                                 "call_id": call_id  # Use original call_id
                                             }
                                         }
                                     )
                                     continue
 
-                                url = first_result_response["url"]
-                                #recipe_name = first_result_response["name"]
-                                url_response = f"Here is a link for you: {url}"
 
                                 await self.rt_client.ws.send_json(
                                     {
                                         "type": "conversation.item.create",
                                         "item": {
                                             "type": "function_call_output",
-                                            "output": url_response,
+                                            "output": "For whom you need the back up care for",
                                            # "output": f"Here is a recipe for you: {recipe_name}",
                                             "call_id": call_id  # Use original call_id
                                         }
@@ -243,12 +250,12 @@ class CommunicationHandler:
                                         "type": "response.create",
                                         "response": {
                                             "modalities": ["text", "audio"],
-                                            "instructions": f"Respond to the user that you found named {url_response}. Be concise and friendly."
+                                            "instructions": f"Respond to the user that you are able to validate and proceed with the next set of questions."
                                         }
                                     }
                                 )
                             except Exception as e:
-                                logger.error(f"Error in recipe search: {e}")
+                                logger.error(f"Error in Response: {e}")
                                 await self.rt_client.ws.send_json(
                                     {
                                         "type": "conversation.item.create",

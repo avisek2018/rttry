@@ -53,6 +53,7 @@ acs_ca_client = CallAutomationClient.from_connection_string(ACS_CONNECTION_STRIN
 CALLBACK_URI_HOST = os.getenv("CALLBACK_URI_HOST")
 CALLBACK_EVENTS_URI = CALLBACK_URI_HOST + "/api/callbacks"
 
+caller_id = None  # Define at the top level
 
 
 @app.get("/")
@@ -73,7 +74,7 @@ async def incoming_call_handler(request: Request):
             logger.info("Validating subscription")
             validation_code = event.data["validationCode"]
             validation_response = {"validationResponse": validation_code}
-            logger.info(validation_response)
+            
             return JSONResponse(
                 content=validation_response, status_code=status.HTTP_200_OK
             )
@@ -197,7 +198,7 @@ async def ws(websocket: WebSocket):
     logger.info("WebSocket connection trying to get established")
     await websocket.accept()
     logger.info("WebSocket connection established")
-    service = CommunicationHandler(websocket)
+    service = CommunicationHandler(websocket, caller_id)
     await service.start_conversation_async()
     
     while True:

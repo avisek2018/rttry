@@ -101,7 +101,7 @@ async def incoming_call_handler(request: Request):
 
             parsed_url = urlparse(CALLBACK_EVENTS_URI)
             #websocket_url = urlunparse(("wss", parsed_url.netloc, "/ws", "", "", ""))
-            websocket_url = urlunparse(("wss", parsed_url.netloc, f"/ws?caller_id={caller_id}", "", "", ""))
+            websocket_url = urlunparse(("wss", parsed_url.netloc, "/ws", "", f"caller_id={caller_id}", ""))
 
        
 
@@ -197,12 +197,12 @@ async def handle_callback_with_context(contextId: str, request: Request):
 
 # WebSocket
 @app.websocket("/ws")
-async def ws(websocket: WebSocket):
+async def ws(websocket: WebSocket, caller_id: Optional[str] = None):
     logger.info("WebSocket connection trying to get established")
     await websocket.accept()
-    caller_id = websocket.query_params.get("caller_id")
+    #caller_id = websocket.query_params.get("caller_id")
     logger.info("WebSocket connection established")
-    logger.info("Caller ID to CommunicationHandler: ", {caller_id})
+    logger.info(f"Caller ID from WebSocket: {caller_id}")
     service = CommunicationHandler(websocket=websocket, caller_id=caller_id)
     await service.start_conversation_async()
     

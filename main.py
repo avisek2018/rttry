@@ -67,7 +67,7 @@ async def incoming_call_handler(request: Request):
     logger.info("incoming event data")
     for event_dict in await request.json():
         event = EventGridEvent.from_dict(event_dict)
-        logger.info("incoming event data --> %s", event.data)
+        logger.info("incoming event data --> %s", {event.data})
         if (
             event.event_type
             == SystemEventNames.EventGridSubscriptionValidationEventName
@@ -94,7 +94,7 @@ async def incoming_call_handler(request: Request):
             logger.info("Caller ID:", {caller_id})
             incoming_call_context = event.data["incomingCallContext"]
             guid = uuid.uuid4()
-
+            logger.info("Incoming Call Context: ", {incoming_call_context})
             query_parameters = urlencode({"callerId": caller_id, "boo": "poop"})
             callback_uri = f"{CALLBACK_EVENTS_URI}/{guid}?{query_parameters}"
 

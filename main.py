@@ -63,6 +63,7 @@ async def root():
 
 @app.post("/api/incomingCall")
 async def incoming_call_handler(request: Request):
+    global caller_id
     logger.info("incoming event data")
     for event_dict in await request.json():
         event = EventGridEvent.from_dict(event_dict)

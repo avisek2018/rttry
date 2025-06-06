@@ -53,7 +53,7 @@ acs_ca_client = CallAutomationClient.from_connection_string(ACS_CONNECTION_STRIN
 CALLBACK_URI_HOST = os.getenv("CALLBACK_URI_HOST")
 CALLBACK_EVENTS_URI = CALLBACK_URI_HOST + "/api/callbacks"
 
-caller_id = None  # Define at the top level
+#caller_id = None  # Define at the top level
 
 
 @app.get("/")
@@ -63,7 +63,7 @@ async def root():
 
 @app.post("/api/incomingCall")
 async def incoming_call_handler(request: Request):
-    global caller_id
+    #global caller_id
     logger.info("incoming event data")
     for event_dict in await request.json():
         event = EventGridEvent.from_dict(event_dict)
@@ -100,7 +100,8 @@ async def incoming_call_handler(request: Request):
             callback_uri = f"{CALLBACK_EVENTS_URI}/{guid}?{query_parameters}"
 
             parsed_url = urlparse(CALLBACK_EVENTS_URI)
-            websocket_url = urlunparse(("wss", parsed_url.netloc, "/ws", "", "", ""))
+            #websocket_url = urlunparse(("wss", parsed_url.netloc, "/ws", "", "", ""))
+            websocket_url = urlunparse(("wss", parsed_url.netloc, f"/ws?caller_id={caller_id}", "", "", ""))
 
        
 
@@ -199,6 +200,7 @@ async def handle_callback_with_context(contextId: str, request: Request):
 async def ws(websocket: WebSocket):
     logger.info("WebSocket connection trying to get established")
     await websocket.accept()
+    caller_id = websocket.query_params.get("caller_id")
     logger.info("WebSocket connection established")
     logger.info("Caller ID to CommunicationHandler: ", {caller_id})
     service = CommunicationHandler(websocket=websocket, caller_id=caller_id)

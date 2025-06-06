@@ -67,7 +67,7 @@ async def incoming_call_handler(request: Request):
     logger.info("incoming event data")
     for event_dict in await request.json():
         event = EventGridEvent.from_dict(event_dict)
-        logger.info("Received Event Dict: ", {event_dict})
+        logger.info("Received Event Dict: ", {str(event_dict)})
         #logger.info("incoming event data --> %s", {event.data})
         if (
             event.event_type

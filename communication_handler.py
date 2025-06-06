@@ -122,7 +122,11 @@ class CommunicationHandler:
         self.conversation_call_id = str(uuid.uuid4())
 
         content_part = InputTextContentPart(
-            text="Greet the caller with a message – Please give me a couple of seconds so we can verify your details. I will then be able to assist you with your request.",
+            text="""
+                Greet the caller with a message – Please give me a couple of seconds so we can verify your details. 
+                I will then be able to assist you with your request.
+                Please verify the user by the caller_id (phone number) provided in the WebSocket connection.
+                """,
         )
         initial_conversation_item = ItemCreateMessage(
             item=UserMessageItem(content=[content_part]),
@@ -208,6 +212,7 @@ class CommunicationHandler:
                             try:
                                 #query = args["query"]
                                 # Use the phone number from the handler (self.target_phone_number)
+                                logger.info(f"Trying to verify with phone no: {self.caller_id}")
                                 is_verified = await VerifyUser.verify_user(self.caller_id)
                                 logger.info(f"User Verified? {is_verified}")
                                 if not is_verified:
@@ -227,7 +232,7 @@ class CommunicationHandler:
                                             "type": "conversation.item.create",
                                             "item": {
                                                 "type": "function_call_output",
-                                                "output": "I failed to veeify you based on your ph no.",
+                                                "output": "I failed to verify you based on your one no.",
                                                 "call_id": call_id  # Use original call_id
                                             }
                                         }
@@ -240,8 +245,7 @@ class CommunicationHandler:
                                         "type": "conversation.item.create",
                                         "item": {
                                             "type": "function_call_output",
-                                            "output": "For whom you need the back up care for",
-                                           # "output": f"Here is a recipe for you: {recipe_name}",
+                                            "output": "For whom you need the back up care for?",
                                             "call_id": call_id  # Use original call_id
                                         }
                                     }

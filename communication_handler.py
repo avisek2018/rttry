@@ -29,7 +29,7 @@ from rtclient import (
 import logging
 from aiologger import Logger
 
-from gs import SearchResults
+
 from verify_user import VerifyUser
 
 

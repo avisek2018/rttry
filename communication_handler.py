@@ -208,7 +208,7 @@ class CommunicationHandler:
                             try:
                                 #query = args["query"]
                                 # Use the phone number from the handler (self.target_phone_number)
-                                is_verified = await VerifyUser.verify_user(self.target_phone_number)
+                                is_verified = await VerifyUser.verify_user(self.caller_id)
                                 logger.info(f"User Verified? {is_verified}")
                                 if not is_verified:
                                     await self.rt_client.ws.send_json(

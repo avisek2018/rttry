@@ -62,7 +62,7 @@ class CommunicationHandler:
 
     caller_id = None  # Define at the top level
 
-    def __init__(self, websocket: , caller_id) -> None:
+    def __init__(self, websocket: WebSocket, caller_id) -> None:
         self.rt_client = None
         self.active_websocket = websocket
         self.caller_id = caller_id

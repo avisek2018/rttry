@@ -21,7 +21,7 @@ class VerifyUser:
             Logs a warning if the JSON file cannot be read or parsed.
         """
         #json_path = os.path.join(os.path.dirname(__file__), "verified_user.json")
-        json_path = "./json/verified_users.json"
+        json_path = "./json/verified_user.json"
         try:
             with open(json_path, "r", encoding="utf-8") as f:
                 data = json.load(f)

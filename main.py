@@ -199,6 +199,7 @@ async def ws(websocket: WebSocket):
     logger.info("WebSocket connection trying to get established")
     await websocket.accept()
     logger.info("WebSocket connection established")
+    logger.info("Caller ID to CommunicationHandler: ", {caller_id})
     service = CommunicationHandler(websocket=websocket, caller_id=caller_id)
     await service.start_conversation_async()
     

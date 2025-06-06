@@ -25,6 +25,8 @@ class VerifyUser:
         try:
             with open(json_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
+
+            print("Dumping Data Here:", data)
             return phone_number in data.get("verified_numbers", [])
         except Exception as e:
             logging.warning(f"Could not read verified_user.json: {e}")

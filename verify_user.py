@@ -1,7 +1,12 @@
 import os
 import json
 import logging
+from aiologger import Logger
 from typing import List
+
+logging.basicConfig(level=logging.INFO)
+# logger = logging.getLogger(__name__)
+logger = Logger.with_default_handlers()
 
 class VerifyUser:
     @staticmethod
@@ -26,7 +31,7 @@ class VerifyUser:
             with open(json_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
-            print("Dumping Data Here:", data)
+            logger.info("Dumping Data Here:", {json.dumps(data)})
             return phone_number in data.get("verified_numbers", [])
         except Exception as e:
             logging.warning(f"Could not read verified_user.json: {e}")

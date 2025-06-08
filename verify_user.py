@@ -31,11 +31,14 @@ class VerifyUser:
         try:
             with open(json_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
+
+            # Access the array
+            ph_array = data["verified_numbers"]
             
             # Log the JSON data using aiologger
             await logger.info(f"Dumping Data Here:\n{json.dumps(data, indent=2)}")
             
-            return phone_number in data.get("verified_numbers", [])
+            return phone_number in ph_array
         except FileNotFoundError:
             await logger.warning(f"JSON file not found: {json_path}")
             return False

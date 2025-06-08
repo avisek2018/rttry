@@ -39,7 +39,7 @@ class VerifyUser:
 
             # Access the array
             ph_array = data["verified_numbers"]
-            user_verified = phone_number in ph_array
+            user_verified = phone_number.strip() in ph_array
             await logger.info(f"Is user verified? {user_verified} for phone number: {phone_number}")
             return user_verified
         except FileNotFoundError:

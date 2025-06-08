@@ -37,9 +37,7 @@ class VerifyUser:
             # Log the JSON data using aiologger
             await logger.info(f"Dumping Data Here:\n{json.dumps(data, indent=2)}")
 
-            # Access the array
-            ph_array = data["verified_numbers"]
-            user_verified = phone_number.strip() in ph_array
+            user_verified =  phone_number.strip() in data.get("verified_numbers", [])
             await logger.info(f"Is user verified? {user_verified} for phone number: {phone_number}")
             return user_verified
         except FileNotFoundError:

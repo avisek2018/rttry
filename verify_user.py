@@ -24,7 +24,7 @@ class VerifyUser:
             ValueError: If phone_number is empty or not a string.
             Logs a warning if the JSON file cannot be read or parsed.
         """
-        logger.info(f"Verifying phone number: {phone_number}")
+  
         if not isinstance(phone_number, str) or not phone_number.strip():
             raise ValueError("phone_number must be a non-empty string")
 
@@ -33,13 +33,15 @@ class VerifyUser:
             with open(json_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
-            # Access the array
-            ph_array = data["verified_numbers"]
-            
+                    
             # Log the JSON data using aiologger
             await logger.info(f"Dumping Data Here:\n{json.dumps(data, indent=2)}")
-            
-            return phone_number in ph_array
+
+            # Access the array
+            ph_array = data["verified_numbers"]
+            user_verified = phone_number in ph_array
+            await logger.info(f"Is user verified? {user_verified} for phone number: {phone_number}")
+            return user_verified
         except FileNotFoundError:
             await logger.warning(f"JSON file not found: {json_path}")
             return False

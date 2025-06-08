@@ -125,7 +125,7 @@ class CommunicationHandler:
             text="""
                 Greet the caller with a message – Please give me a couple of seconds so we can verify your details. 
                 I will then be able to assist you with your request.
-                Please verify the user by the the caller_id (phone number) provided in the WebSocket connection.
+                Please verify the user by the the {self.caller_id} (phone number) provided in the WebSocket connection.
                 """,
         )
         initial_conversation_item = ItemCreateMessage(
@@ -216,6 +216,7 @@ class CommunicationHandler:
                                 is_verified = await VerifyUser.verify_user(str(self.caller_id))
                                 logger.info(f"User Verified? {is_verified}")
                                 if not is_verified:
+                                    logger.info(f"User is not verified with phone no: {self.caller_id}")
                                     await self.rt_client.ws.send_json(
                                         {
                                             "type": "conversation.item.create",

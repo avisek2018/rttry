@@ -24,6 +24,7 @@ class VerifyUser:
             ValueError: If phone_number is empty or not a string.
             Logs a warning if the JSON file cannot be read or parsed.
         """
+        logger.info(f"Verifying phone number: {phone_number}")
         if not isinstance(phone_number, str) or not phone_number.strip():
             raise ValueError("phone_number must be a non-empty string")
 

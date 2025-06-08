@@ -125,7 +125,7 @@ class CommunicationHandler:
             text="""
                 Greet the caller with a message – Please give me a couple of seconds so we can verify your details. 
                 I will then be able to assist you with your request.
-                Please verify the user by the the {self.caller_id} (phone number) provided in the WebSocket connection.
+                Please verify the user by the the caller id (phone number) provided in the WebSocket connection.
                 """,
         )
         initial_conversation_item = ItemCreateMessage(
@@ -233,7 +233,7 @@ class CommunicationHandler:
                                             "type": "conversation.item.create",
                                             "item": {
                                                 "type": "function_call_output",
-                                                "output": "I failed to verify you based on your one no.",
+                                                "output": "I am able to verify you based on your phone number.",
                                                 "call_id": call_id  # Use original call_id
                                             }
                                         }

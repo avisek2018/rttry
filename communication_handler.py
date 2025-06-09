@@ -213,7 +213,7 @@ class CommunicationHandler:
                                 #query = args["query"]
                                 # Use the phone number from the handler (self.target_phone_number)
                                 logger.info(f"Trying to verify with phone no: {self.caller_id}")
-                                is_verified = await VerifyUser.verify_user(str(self.caller_id))
+                                is_verified = await VerifyUser.verify_user(self.caller_id)
                                 logger.info(f"User Verified? {is_verified}")
                                 if not is_verified:
                                     logger.info(f"User is not verified with phone no: {self.caller_id}")
@@ -222,11 +222,12 @@ class CommunicationHandler:
                                             "type": "conversation.item.create",
                                             "item": {
                                                 "type": "function_call_output",
-                                                "output": "Sorry, I couldn't verify your phone number.",
+                                                "output": "Sorry, I couldn't verify your phone number. Let me transfer you to an agent.",
                                                 "call_id": call_id  # Use original call_id
                                             }
                                         }
                                     )
+                                    continue
                                 else:
                                     await self.rt_client.ws.send_json(
                                         {
@@ -238,7 +239,6 @@ class CommunicationHandler:
                                             }
                                         }
                                     )
-                                    continue
 
 
                                 await self.rt_client.ws.send_json(
